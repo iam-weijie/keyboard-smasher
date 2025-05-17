@@ -1,23 +1,33 @@
 import Quartz
-from AppKit import NSApp, NSApplication, NSWindow, NSBackingStoreBuffered, NSView, NSTextView, NSMakeRect, NSBorderlessWindowMask, NSTitledWindowMask
-from AppKit import NSWindowStyleMaskBorderless, NSWindowStyleMaskTitled, NSFloatingWindowLevel
-from AppKit import NSColor, NSTextField, NSFont
+import threading
+import time
+from AppKit import NSApp, NSApplication, NSWindow, NSBackingStoreBuffered, NSView, NSTextView, NSMakeRect, NSBorderlessWindowMask, NSTitledWindowMask, NSWindowStyleMaskBorderless, NSWindowStyleMaskTitled, NSFloatingWindowLevel, NSColor, NSTextField, NSFont
 from Foundation import NSObject, NSAutoreleasePool
 
 total_key_presses = 0
+reset_timer = None
+INACTIVITY_TIMEOUT = 2
 
 # Global reference to update label
 label_ref = None
 
-def callback(proxy, event_type, event, refcon):
-    global label_ref, total_key_presses
-    if event_type == Quartz.kCGEventKeyDown:
-        keycode = Quartz.CGEventGetIntegerValueField(event, Quartz.kCGKeyboardEventKeycode)
-        total_key_presses += 1
+def reset_count():
+    global total_key_presses, label_ref
+    total_key_presses = 0
 
+def callback(proxy, event_type, event, refcon):
+    global label_ref, total_key_presses, reset_timer
+    if event_type == Quartz.kCGEventKeyDown: 
+        total_key_presses += 1
         if label_ref:
-            text = f"{total_key_presses} HITS"
-            label_ref.setStringValue_(text)
+            label_ref.setStringValue_(f"{total_key_presses} HITS")
+
+        # Reset the timer
+        if reset_timer is not None:
+            reset_timer.cancel()
+        reset_timer = threading.Timer(INACTIVITY_TIMEOUT, reset_count)
+        reset_timer.start()
+        
     return event
 
 def create_window():
