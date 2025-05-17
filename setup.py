@@ -1,16 +1,16 @@
 from setuptools import setup
 
-APP = ['keytracker.py']  # your script filename
+APP = ['keytracker.py']
 DATA_FILES = []
 OPTIONS = {
     'argv_emulation': True,
-    'includes': ['AppKit', 'Quartz', 'Foundation'],
+    'includes': ['Quartz', 'AppKit', 'Foundation'],
+    'packages': ['objc'],
     'plist': {
         'CFBundleName': 'Key Smasher',
-        'CFBundleDisplayName': 'Key Smasher',
         'CFBundleIdentifier': 'com.weijie.keysmasher',
-        'CFBundleVersion': '0.1.0',
-        'LSUIElement': True,  # Prevents Dock icon
+        'CFBundleShortVersionString': '1.0',
+        'LSUIElement': True  # Hides from dock
     },
 }
 
