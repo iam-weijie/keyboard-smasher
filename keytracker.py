@@ -7,20 +7,37 @@ from Foundation import NSObject, NSAutoreleasePool
 total_key_presses = 0
 reset_timer = None
 INACTIVITY_TIMEOUT = 2
+window_ref = None
 
 # Global reference to update label
 label_ref = None
 
 def reset_count():
-    global total_key_presses, label_ref
+    global total_key_presses
     total_key_presses = 0
+    hide_window()
+
+
+def flash_window(window):
+    def fade_out():
+        window.setAlphaValue_(0.0)
+        threading.Timer(0.05, fade_in).start()
+
+    def fade_in():
+        window.setAlphaValue_(0.8)
+
+    fade_out()
+
 
 def callback(proxy, event_type, event, refcon):
-    global label_ref, total_key_presses, reset_timer
+    global label_ref, total_key_presses, reset_timer, window_ref
+    
     if event_type == Quartz.kCGEventKeyDown: 
         total_key_presses += 1
         if label_ref:
             label_ref.setStringValue_(f"{total_key_presses} HITS")
+        if window_ref:
+            flash_window(window_ref)
 
         # Reset the timer
         if reset_timer is not None:
@@ -31,7 +48,7 @@ def callback(proxy, event_type, event, refcon):
     return event
 
 def create_window():
-    global label_ref
+    global label_ref, window_ref
 
     app = NSApplication.sharedApplication()
 
@@ -63,7 +80,15 @@ def create_window():
     window.orderFrontRegardless()
 
     label_ref = label
+    window_ref = window
     return app
+
+
+def hide_window():
+    global window_ref
+    if window_ref:
+        window_ref.setAlphaValue_(0.0)
+
 
 def main():
     event_mask = Quartz.CGEventMaskBit(Quartz.kCGEventKeyDown)
