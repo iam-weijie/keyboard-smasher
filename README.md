@@ -1,4 +1,4 @@
-# hotkeys
+# Key Smasher
 
 Weijie's Tech Fails ep.2
 
