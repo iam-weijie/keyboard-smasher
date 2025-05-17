@@ -8,7 +8,7 @@ OPTIONS = {
     'plist': {
         'CFBundleName': 'Key Smasher',
         'CFBundleDisplayName': 'Key Smasher',
-        'CFBundleIdentifier': 'com.yourname.keysmasher',
+        'CFBundleIdentifier': 'com.weijie.keysmasher',
         'CFBundleVersion': '0.1.0',
         'LSUIElement': True,  # Prevents Dock icon
     },
