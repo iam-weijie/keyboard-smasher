@@ -76,24 +76,24 @@ def create_window():
     window.setAlphaValue_(0.0)  # Start hidden
 
     # Combo number
-    count_label = NSTextField.alloc().initWithFrame_(NSMakeRect(10, 10, 130, 40))
+    count_label = NSTextField.alloc().initWithFrame_(NSMakeRect(10, 12, 130, 40))
     count_label.setStringValue_("0")
     count_label.setBezeled_(False)
     count_label.setDrawsBackground_(False)
     count_label.setEditable_(False)
     count_label.setSelectable_(False)
-    count_label.setFont_(NSFont.boldSystemFontOfSize_(36))
+    count_label.setFont_(NSFont.boldSystemFontOfSize_(40))
     count_label.setTextColor_(NSColor.redColor())
     count_label.setAlignment_(2)
 
     # "HITS" label, shifted right
-    hits_label = NSTextField.alloc().initWithFrame_(NSMakeRect(140, 12, 100, 30))
+    hits_label = NSTextField.alloc().initWithFrame_(NSMakeRect(140, 0, 100, 30))
     hits_label.setStringValue_("HITS")
     hits_label.setBezeled_(False)
     hits_label.setDrawsBackground_(False)
     hits_label.setEditable_(False)
     hits_label.setSelectable_(False)
-    hits_label.setFont_(NSFont.systemFontOfSize_(20))
+    hits_label.setFont_(NSFont.systemFontOfSize_(16))
     hits_label.setTextColor_(NSColor.whiteColor())
     hits_label.setAlignment_(0)
 
