@@ -1,12 +1,10 @@
 import threading
-import time
 import Quartz
 from AppKit import (
-    NSApp, NSApplication, NSWindow, NSBackingStoreBuffered, NSMakeRect,
+    NSApplication, NSWindow, NSBackingStoreBuffered, NSMakeRect,
     NSWindowStyleMaskBorderless, NSFloatingWindowLevel, NSColor, NSTextField,
     NSFont
 )
-from Foundation import NSObject
 
 total_key_presses = 0
 reset_timer = None
@@ -15,6 +13,7 @@ INACTIVITY_TIMEOUT = 2
 # Global UI references
 window_ref = None
 count_label_ref = None
+outline_count_label_ref = None  # Outline for number
 
 
 def reset_count():
@@ -35,7 +34,7 @@ def flash_window(window):
 
 
 def callback(proxy, event_type, event, refcon):
-    global total_key_presses, reset_timer, window_ref, count_label_ref
+    global total_key_presses, reset_timer, window_ref, count_label_ref, outline_count_label_ref
 
     if event_type == Quartz.kCGEventKeyDown:
         total_key_presses += 1
@@ -44,12 +43,14 @@ def callback(proxy, event_type, event, refcon):
             if window_ref.alphaValue() < 0.8:
                 window_ref.setAlphaValue_(0.8)
 
-            # Update label
+            # Update both main count label and outline label
             if count_label_ref:
                 count_label_ref.setStringValue_(str(total_key_presses))
-            # Flash effect        
+            if outline_count_label_ref:
+                outline_count_label_ref.setStringValue_(str(total_key_presses))
+
             flash_window(window_ref)
-            # Reset the timer
+
             if reset_timer is not None:
                 reset_timer.cancel()
             reset_timer = threading.Timer(INACTIVITY_TIMEOUT, reset_count)
@@ -59,7 +60,7 @@ def callback(proxy, event_type, event, refcon):
 
 
 def create_window():
-    global window_ref, count_label_ref
+    global window_ref, count_label_ref, outline_count_label_ref
 
     app = NSApplication.sharedApplication()
 
@@ -75,8 +76,22 @@ def create_window():
     window.setIgnoresMouseEvents_(True)
     window.setAlphaValue_(0.0)  # Start hidden
 
-    pink_color = NSColor.colorWithCalibratedRed_green_blue_alpha_(0.71, 0.0, 0.196, 1.0)
-    # Combo number
+    # Colors
+    pink_color_hits = NSColor.colorWithCalibratedRed_green_blue_alpha_(0.71, 0.0, 0.196, 1.0)  # #b50032
+    pink_color_number = NSColor.colorWithCalibratedRed_green_blue_alpha_(0.91, 0.49, 0.64, 1.0)  # #e781a3
+
+    # Outline number label (slightly bigger)
+    outline_count_label = NSTextField.alloc().initWithFrame_(NSMakeRect(0, 12, 130, 43))
+    outline_count_label.setStringValue_("0")
+    outline_count_label.setBezeled_(False)
+    outline_count_label.setDrawsBackground_(False)
+    outline_count_label.setEditable_(False)
+    outline_count_label.setSelectable_(False)
+    outline_count_label.setFont_(NSFont.boldSystemFontOfSize_(43))  # Slightly bigger for outline
+    outline_count_label.setTextColor_(pink_color_number)
+    outline_count_label.setAlignment_(2)
+
+    # Main count label (on top)
     count_label = NSTextField.alloc().initWithFrame_(NSMakeRect(0, 12, 130, 40))
     count_label.setStringValue_("0")
     count_label.setBezeled_(False)
@@ -84,11 +99,21 @@ def create_window():
     count_label.setEditable_(False)
     count_label.setSelectable_(False)
     count_label.setFont_(NSFont.boldSystemFontOfSize_(40))
-    # count_label.setTextColor_(NSColor.redColor())
-    count_label.setTextColor_(pink_color)
+    count_label.setTextColor_(pink_color_hits)
     count_label.setAlignment_(2)
 
-    # "HITS" label
+    # Outline "HITS" label (slightly bigger and bold)
+    outline_label = NSTextField.alloc().initWithFrame_(NSMakeRect(128, 0, 110, 32))
+    outline_label.setStringValue_("HITS")
+    outline_label.setBezeled_(False)
+    outline_label.setDrawsBackground_(False)
+    outline_label.setEditable_(False)
+    outline_label.setSelectable_(False)
+    outline_label.setFont_(NSFont.boldSystemFontOfSize_(16))
+    outline_label.setTextColor_(pink_color_hits)
+    outline_label.setAlignment_(0)
+
+    # Main "HITS" label (on top)
     hits_label = NSTextField.alloc().initWithFrame_(NSMakeRect(130, 0, 100, 30))
     hits_label.setStringValue_("HITS")
     hits_label.setBezeled_(False)
@@ -99,24 +124,16 @@ def create_window():
     hits_label.setTextColor_(NSColor.whiteColor())
     hits_label.setAlignment_(0)
 
-    # Outline label: slightly bigger
-    outline_label = NSTextField.alloc().initWithFrame_(NSMakeRect(128, 0, 110, 32))
-    outline_label.setStringValue_("HITS")
-    outline_label.setBezeled_(False)
-    outline_label.setDrawsBackground_(False)
-    outline_label.setEditable_(False)
-    outline_label.setSelectable_(False)
-    outline_label.setFont_(NSFont.boldSystemFontOfSize_(16))  # Bold for stronger outline
-    outline_label.setTextColor_(pink_color)
-    outline_label.setAlignment_(0)
-
-    window.contentView().addSubview_(outline_label)
+    # Add subviews in order: outline first, then main labels on top
+    window.contentView().addSubview_(outline_count_label)
     window.contentView().addSubview_(count_label)
+    window.contentView().addSubview_(outline_label)
     window.contentView().addSubview_(hits_label)
     window.orderFrontRegardless()
 
     window_ref = window
     count_label_ref = count_label
+    outline_count_label_ref = outline_count_label
 
     return app
 
