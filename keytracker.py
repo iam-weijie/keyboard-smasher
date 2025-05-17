@@ -40,23 +40,20 @@ def callback(proxy, event_type, event, refcon):
     if event_type == Quartz.kCGEventKeyDown:
         total_key_presses += 1
 
-        # Show window if hidden
-        if window_ref.alphaValue() < 0.8:
-            window_ref.setAlphaValue_(0.8)
+        if total_key_presses >= 2:
+            if window_ref.alphaValue() < 0.8:
+                window_ref.setAlphaValue_(0.8)
 
-        # Update label
-        if count_label_ref:
-            count_label_ref.setStringValue_(str(total_key_presses))
-
-        # Flash effect
-        if window_ref:
+            # Update label
+            if count_label_ref:
+                count_label_ref.setStringValue_(str(total_key_presses))
+            # Flash effect        
             flash_window(window_ref)
-
-        # Reset the timer
-        if reset_timer is not None:
-            reset_timer.cancel()
-        reset_timer = threading.Timer(INACTIVITY_TIMEOUT, reset_count)
-        reset_timer.start()
+            # Reset the timer
+            if reset_timer is not None:
+                reset_timer.cancel()
+            reset_timer = threading.Timer(INACTIVITY_TIMEOUT, reset_count)
+            reset_timer.start()
 
     return event
 
@@ -66,9 +63,8 @@ def create_window():
 
     app = NSApplication.sharedApplication()
 
-    # Window
     window = NSWindow.alloc().initWithContentRect_styleMask_backing_defer_(
-        NSMakeRect(20, 600, 250, 60),
+        NSMakeRect(20, 600, 300, 60),
         NSWindowStyleMaskBorderless,
         NSBackingStoreBuffered,
         False
@@ -77,10 +73,10 @@ def create_window():
     window.setOpaque_(False)
     window.setBackgroundColor_(NSColor.clearColor())
     window.setIgnoresMouseEvents_(True)
-    window.setAlphaValue_(0.8)
+    window.setAlphaValue_(0.0)  # Start hidden
 
-    # Count label (big red number)
-    count_label = NSTextField.alloc().initWithFrame_(NSMakeRect(10, 10, 120, 40))
+    # Combo number
+    count_label = NSTextField.alloc().initWithFrame_(NSMakeRect(10, 10, 130, 40))
     count_label.setStringValue_("0")
     count_label.setBezeled_(False)
     count_label.setDrawsBackground_(False)
@@ -88,16 +84,16 @@ def create_window():
     count_label.setSelectable_(False)
     count_label.setFont_(NSFont.boldSystemFontOfSize_(36))
     count_label.setTextColor_(NSColor.redColor())
-    count_label.setAlignment_(2)  # Center
+    count_label.setAlignment_(2)
 
-    # Hits label
-    hits_label = NSTextField.alloc().initWithFrame_(NSMakeRect(100, 10, 100, 30))
+    # "HITS" label, shifted right
+    hits_label = NSTextField.alloc().initWithFrame_(NSMakeRect(140, 12, 100, 30))
     hits_label.setStringValue_("HITS")
     hits_label.setBezeled_(False)
     hits_label.setDrawsBackground_(False)
     hits_label.setEditable_(False)
     hits_label.setSelectable_(False)
-    hits_label.setFont_(NSFont.systemFontOfSize_(18))
+    hits_label.setFont_(NSFont.systemFontOfSize_(20))
     hits_label.setTextColor_(NSColor.whiteColor())
     hits_label.setAlignment_(0)
 
