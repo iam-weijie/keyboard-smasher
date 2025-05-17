@@ -136,7 +136,7 @@ def main():
     try:
         Quartz.CFRunLoopRun()
     except KeyboardInterrupt:
-        print("Exiting.")
+        print("Game Over")
 
 
 if __name__ == '__main__':
