@@ -75,8 +75,9 @@ def create_window():
     window.setIgnoresMouseEvents_(True)
     window.setAlphaValue_(0.0)  # Start hidden
 
+    pink_color = NSColor.colorWithCalibratedRed_green_blue_alpha_(0.71, 0.0, 0.196, 1.0)
     # Combo number
-    count_label = NSTextField.alloc().initWithFrame_(NSMakeRect(10, 12, 130, 40))
+    count_label = NSTextField.alloc().initWithFrame_(NSMakeRect(0, 12, 130, 40))
     count_label.setStringValue_("0")
     count_label.setBezeled_(False)
     count_label.setDrawsBackground_(False)
@@ -84,12 +85,11 @@ def create_window():
     count_label.setSelectable_(False)
     count_label.setFont_(NSFont.boldSystemFontOfSize_(40))
     # count_label.setTextColor_(NSColor.redColor())
-    pink_color = NSColor.colorWithCalibratedRed_green_blue_alpha_(0.71, 0.0, 0.196, 1.0)
     count_label.setTextColor_(pink_color)
     count_label.setAlignment_(2)
 
-    # "HITS" label, shifted right
-    hits_label = NSTextField.alloc().initWithFrame_(NSMakeRect(140, 0, 100, 30))
+    # "HITS" label
+    hits_label = NSTextField.alloc().initWithFrame_(NSMakeRect(130, 0, 100, 30))
     hits_label.setStringValue_("HITS")
     hits_label.setBezeled_(False)
     hits_label.setDrawsBackground_(False)
@@ -99,6 +99,18 @@ def create_window():
     hits_label.setTextColor_(NSColor.whiteColor())
     hits_label.setAlignment_(0)
 
+    # Outline label: slightly bigger
+    outline_label = NSTextField.alloc().initWithFrame_(NSMakeRect(128, 0, 110, 32))
+    outline_label.setStringValue_("HITS")
+    outline_label.setBezeled_(False)
+    outline_label.setDrawsBackground_(False)
+    outline_label.setEditable_(False)
+    outline_label.setSelectable_(False)
+    outline_label.setFont_(NSFont.boldSystemFontOfSize_(16))  # Bold for stronger outline
+    outline_label.setTextColor_(pink_color)
+    outline_label.setAlignment_(0)
+
+    window.contentView().addSubview_(outline_label)
     window.contentView().addSubview_(count_label)
     window.contentView().addSubview_(hits_label)
     window.orderFrontRegardless()
