@@ -1,4 +1,4 @@
-# Keyboard Smasher
+# ⌨ Keyboard Smasher
 
 A lightweight Python script that tracks your keyboard key presses and displays a floating counter window with a cool combo effect.
 
