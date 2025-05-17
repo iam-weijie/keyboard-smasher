@@ -64,3 +64,15 @@ To enable:
 - If you don't see the floating window after running, make sure Accessibility permissions are granted.
 
 - Run the script from Terminal and watch for error messages.
+
+  Follow for more of _Weijie's Tech Fails_
+
+### Follow for more side projects, and occasional magic tricks with code ✨
+
+- [Instagram](https://www.instagram.com/iam._.weijie/)
+
+- [TikTok](https://www.tiktok.com/@iam._.weijie)
+
+- [Youtube](https://www.youtube.com/@iam_weijie)
+
+- [LinkedIn](https://www.linkedin.com/in/weijiew/)
