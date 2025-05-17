@@ -67,7 +67,7 @@ To enable:
 
   Follow for more of _Weijie's Tech Fails_
 
-### Follow for more side projects, and occasional magic tricks with code ✨
+## Follow for more side projects, and occasional magic tricks with code ✨
 
 - [Instagram](https://www.instagram.com/iam._.weijie/)
 
