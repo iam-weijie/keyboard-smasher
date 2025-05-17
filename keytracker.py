@@ -83,7 +83,9 @@ def create_window():
     count_label.setEditable_(False)
     count_label.setSelectable_(False)
     count_label.setFont_(NSFont.boldSystemFontOfSize_(40))
-    count_label.setTextColor_(NSColor.redColor())
+    # count_label.setTextColor_(NSColor.redColor())
+    pink_color = NSColor.colorWithCalibratedRed_green_blue_alpha_(0.71, 0.0, 0.196, 1.0)
+    count_label.setTextColor_(pink_color)
     count_label.setAlignment_(2)
 
     # "HITS" label, shifted right
