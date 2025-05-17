@@ -121,7 +121,7 @@ def create_window():
     hits_label.setEditable_(False)
     hits_label.setSelectable_(False)
     hits_label.setFont_(NSFont.systemFontOfSize_(16))
-    hits_label.setTextColor_(NSColor.whiteColor())
+    hits_label.setTextColor_(NSColor.colorWithCalibratedRed_green_blue_alpha_(1.0, 0.992, 1.0, 1.0))
     hits_label.setAlignment_(0)
 
     # Add subviews in order: outline first, then main labels on top
